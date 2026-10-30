@@ -38,6 +38,37 @@ cd be && uv run pytest && uv run ruff check .
 cd fe && pnpm lint && pnpm typecheck && pnpm build
 ```
 
+## Impeccable design tools
+
+[Impeccable](https://github.com/pbakaus/impeccable/tree/skill-v4.8.0) 4.8.0 is included in `.agents/skills/impeccable/`, with Codex design hooks in `.codex/hooks.json`. Open the repository root in Codex and start a new chat to load the skill. Open `/hooks` and approve the project hooks to enable automatic design checks.
+
+In the agent chat, use:
+
+```text
+$impeccable init
+$impeccable critique fe/src/app/page.tsx
+$impeccable audit fe/src
+$impeccable polish fe/src/app/page.tsx
+```
+
+Run `init` when adapting the starter to a real product, using `docs/PRODUCT_SPEC.md` for its requirements. Commit the generated root `PRODUCT.md` and keep it consistent with the spec. Use `$impeccable document` to record an established visual system in `DESIGN.md`.
+
+For a standalone source scan, run from the repository root:
+
+```bash
+.agents/skills/impeccable/scripts/impeccable detect fe/src
+```
+
+On Windows, use `.agents\skills\impeccable\scripts\impeccable.cmd detect fe/src`. The launcher downloads and checksum-verifies the pinned engine (0.1.18) on first use, requiring network access and a writable user cache. Downloaded binaries and transient scan state are ignored by Git. Exit code `0` means no primary findings, `2` means design findings, and `1` means a scan failed. Source scans do not check rendered layout or contrast; with the frontend running, scan `http://localhost:3000` for browser checks.
+
+To update the project installation, run from the repository root:
+
+```bash
+npx impeccable update --project
+```
+
+Review and commit the updated skill and hooks, refresh the upstream `LICENSE` and `NOTICE.md` in the skill folder, and update the version documented here and in `AGENTS.md`. Approve changed hooks again in Codex. The vendored files retain Impeccable's [Apache-2.0 license](.agents/skills/impeccable/LICENSE) and [third-party notices](.agents/skills/impeccable/NOTICE.md).
+
 ## First steps for a new project
 
 1. Fill in `docs/PRODUCT_SPEC.md` with the problem, users, scope, and acceptance criteria.
